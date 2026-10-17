@@ -1,4 +1,35 @@
 (() => {
+
+  const SUPABASE_URL = 'https://awtveiytwwbvktdeugke.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_GC4rsLR8tZ8Wi1GCXiqenA_oJPnn4uq';
+
+  async function testSupabaseConnection() {
+    try {
+      const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/collections?select=id,name,status&limit=1`,
+        {
+          headers: {
+            apikey: SUPABASE_PUBLISHABLE_KEY
+          }
+        }
+      );
+
+      if (!response.ok) {
+        console.error('Supabase connection error:', response.status,
+          await response.text());
+        return;
+      }
+
+      const collections = await response.json();
+      console.log('Supabase connection successful!', collections);
+    } catch (error) {
+      console.error('Connection failed:', error);
+    }
+  }
+
+  testSupabaseConnection();
+
+  
   const PRICE = 8000; // Illustrative only — confirm BERIT's final retail price before launch.
   const SHIPPING = 250; // Illustrative only — replace with actual shipping rules.
   let selectedSize = '';
