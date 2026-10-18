@@ -3,31 +3,36 @@
   const SUPABASE_URL = 'https://awtveiytwwbvktdeugke.supabase.co';
   const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_GC4rsLR8tZ8Wi1GCXiqenA_oJPnn4uq';
 
-  async function testSupabaseConnection() {
-    try {
-      const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/collections?select=id,name,status&limit=1`,
-        {
-          headers: {
-            apikey: SUPABASE_PUBLISHABLE_KEY
-          }
+  
+async function testSupabaseConnection() {
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/products?select=id,name,slug,description,fabric,price_paise,collections!inner(status)&status=eq.published&collections.status=eq.published`,
+      {
+        headers: {
+          apikey: SUPABASE_PUBLISHABLE_KEY
         }
-      );
-
-      if (!response.ok) {
-        console.error('Supabase connection error:', response.status,
-          await response.text());
-        return;
       }
+    );
 
-      const collections = await response.json();
-      console.log('Supabase connection successful!', collections);
-    } catch (error) {
-      console.error('Connection failed:', error);
+    if (!response.ok) {
+      console.error(
+        'Product data request failed:',
+        response.status,
+        await response.text()
+      );
+      return;
     }
-  }
 
-  testSupabaseConnection();
+    const products = await response.json();
+    console.log('Published BERIT products:', products);
+  } catch (error) {
+    console.error('Product data request failed:', error);
+  }
+}
+
+testSupabaseConnection();
+
 
   
   const PRICE = 8000; // Illustrative only — confirm BERIT's final retail price before launch.
